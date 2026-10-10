@@ -1,185 +1,75 @@
-The map has been created with the following R code:
+# COSTAL — Interactive Map of Italian Food Science and Technology Degree Programmes
 
-# 2. Caricare le librerie
-library(readxl)
-library(leaflet)
-library(htmlwidgets)
-library(base64enc)
-library(htmltools)
-library(sf)
+## Overview
 
-# Convertire il logo in formato Base64
-logo <- base64enc::dataURI(
-  file = "logo_COSTAL.png",
-  mime = "image/png"
-)
+This repository hosts an interactive geographical map of Italian universities offering degree programmes in **Food Science and Technology**.
 
-# 3. Importare i dati Excel
-list.files()
-dati <- read_excel("COSTAL_Atenei_02.xlsx")
+The project is developed within the activities of **COSTAL**, the Italian coordination network of university degree programmes in Food Science and Technology.
 
-# 4. Creare le informazioni per i popup
-dati$popup <- paste0(
-  "<b>", dati$Ateneo, "</b><br>",
-  "Sede: ", dati$Citta, "<br>",
-  "Corsi: ", dati$Corso, "<br>",
-  "Coordinatore: ", dati$Coordinatore, "<br>",
-  "<a href='", dati$Sito, "' target='_blank'>",
-  "Visita il sito</a>"
-)
+The map provides a geographical overview of participating universities, facilitating access to institutional information and supporting communication, collaboration, and coordination among academic institutions.
 
-# Assegnare un colore in base ai corsi presenti
+## Features
 
-dati$Colore <- ifelse(
-  grepl("L-26", dati$Corso) & grepl("LM-70", dati$Corso),
-  "#E69F00",  # Arancione: entrambi
-  ifelse(
-    grepl("L-26", dati$Corso),
-    "#0072B2",  # Blu: L-26
-    "#009E73"   # Verde: LM-70
-  )
-)
+The interactive map allows users to:
 
+* Explore the geographical distribution of Italian universities offering Food Science and Technology programmes.
+* Identify universities offering Bachelor's (L-26) and Master's (LM-70) degree programmes.
+* Access information about participating institutions.
+* Identify programme coordinators.
+* Follow hyperlinks to official university websites.
+* Navigate the map interactively using zoom and geographical controls.
 
-# ==================================================
-# 5. CREAZIONE DELLA MAPPA COSTAL
-# ==================================================
+## Repository Structure
 
-# 5.1 Creare il confine nazionale
-italia <- st_sf(
-  geometry = st_union(st_geometry(regioni))
-)
+```text
+COSTAL-Map/
+│
+├── README.md
+└── COSTAL_map.html
+```
 
-# 5.2 Creare la mappa
-mappa <- leaflet(
-  options = leafletOptions(
-    zoomControl = TRUE,
-    attributionControl = TRUE
-  )
-) %>%
-  
-  # A. Regioni italiane
-  addPolygons(
-    data = regioni,
-    color = "#888888",       # Confini regionali
-    weight = 0.8,
-    opacity = 1,
-    fillColor = "#EAF2F8",   # Azzurro chiaro
-    fillOpacity = 1,
-    smoothFactor = 0,
-    highlightOptions = highlightOptions(
-      color = "#444444",
-      weight = 1.5,
-      bringToFront = FALSE
-    )
-  ) %>%
-  
-  # B. Confine nazionale
-  addPolygons(
-    data = italia,
-    color = "#333333",       # Grigio scuro
-    weight = 2.5,
-    opacity = 1,
-    fill = FALSE,
-    stroke = TRUE,
-    options = pathOptions(
-      interactive = FALSE
-    )
-  ) %>%
-  
-  # C. Marcatori delle sedi universitarie
-  addCircleMarkers(
-    data = dati,
-    lng = ~Lon,
-    lat = ~Lat,
-    radius = 7,
-    color = "#333333",
-    weight = 1,
-    fillColor = ~Colore,
-    fillOpacity = 0.9,
-    popup = ~popup,
-    label = ~Ateneo
-  ) %>%
-  
-  # D. Inquadratura geografica
-  fitBounds(
-    lng1 = 6.5,
-    lat1 = 35.3,
-    lng2 = 18.7,
-    lat2 = 47.2
-  ) %>%
-  
-  addLegend(
-    position = "bottomright",
-    colors = c("#0072B2", "#009E73", "#E69F00"),
-    labels = c(
-      "L-26 – Laurea triennale",
-      "LM-70 – Laurea magistrale",
-      "L-26 + LM-70 – Entrambi"
-    ),
-    title = "Corsi di laurea",
-    opacity = 1
-  ) %>%
+**COSTAL_map.html** — Interactive geographical map containing university locations and associated information.
 
-  addControl(
-    html = "
-    <div style='
-      background: white;
-      padding: 8px 12px;
-      font-size: 12px;
-      color: #555555;
-      border-radius: 5px;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.15);
-    '>
-      Cliccare sui marcatori per maggiori informazioni.
-    </div>
-  ",
-    position = "bottomleft"
-  ) %>%
+**README.md** — Project documentation.
 
-  addControl(
-    html = paste0(
-      "<div style='
-        background-color: white;
-        padding: 8px;
-        border-radius: 5px;
-      '>",
-      "<img src='", logo, "' ",
-      "style='width: 90px; height: auto;'>",
-      "</div>"
-    ),
-    position = "topright"
-  )
+## Accessing the Interactive Map
 
-# 5.3 Impostare lo sfondo bianco
-mappa <- onRender(
-  mappa,
-  "
-  function(el, x) {
-    el.style.backgroundColor = '#FFFFFF';
-  }
-  "
-)
+The map can be accessed directly through GitHub Pages:
 
-# 5.4 Visualizzazione
-mappa
+**https://USERNAME.github.io/COSTAL-Map/COSTAL_map.html**
 
-# ==================================================
-# 6. ESPORTAZIONE HTML
-# ==================================================
+Replace `USERNAME` with the GitHub account name.
 
-saveWidget(
-  mappa,
-  file = "COSTAL_Map.html",
-  selfcontained = TRUE
-)
+Alternatively, download `COSTAL_map.html` and open it using a modern web browser. Some features may require an Internet connection.
 
-# 6. Visualizzare la mappa in RStudio
-mappa
+## Data and Updates
 
-# 7. Esportare in HTML
-saveWidget(
-  mappa,
-  "COSTAL_Map.html",
-  selfcontained = TRUE
-)
+The map contains information concerning:
+
+* University names and geographical locations.
+* Degree programme classifications (L-26 and LM-70).
+* Academic coordinators.
+* Institutional website addresses.
+
+Information may be periodically updated to reflect changes in participating institutions, degree programmes, and academic responsibilities.
+
+## Technical Information
+
+The interactive map is distributed as an HTML document and can be displayed using modern web browsers.
+
+The repository can be hosted through GitHub Pages without requiring a dedicated web server.
+
+## Project Coordination
+
+**COSTAL**
+Italian Coordination Network of Degree Programmes in Food Science and Technology
+
+## Disclaimer
+
+The information presented in the map is intended for academic communication and informational purposes.
+
+Although efforts are made to maintain accurate and updated information, institutional details may change over time. Official university websites remain the authoritative sources for degree programme information.
+
+## License
+
+No license has been specified for this repository. All rights remain reserved unless an explicit license is added.
