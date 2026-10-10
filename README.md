@@ -36,7 +36,7 @@ COSTAL-Map/
 
 The map can be accessed directly through GitHub Pages:
 
-**https://mscampicchio.github.io/COSTAL-Map/COSTAL_map.html**
+**https://mscampicchio.github.io/COSTAL/COSTAL_Map.html**
 
 ## Data and Updates
 
