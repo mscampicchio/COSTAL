@@ -36,11 +36,7 @@ COSTAL-Map/
 
 The map can be accessed directly through GitHub Pages:
 
-**https://USERNAME.github.io/COSTAL-Map/COSTAL_map.html**
-
-Replace `USERNAME` with the GitHub account name.
-
-Alternatively, download `COSTAL_map.html` and open it using a modern web browser. Some features may require an Internet connection.
+**https://mscampicchio.github.io/COSTAL-Map/COSTAL_map.html**
 
 ## Data and Updates
 
